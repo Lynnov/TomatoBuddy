@@ -15,10 +15,8 @@
         "title": "TomatoBuddy",
         "width": 380,
         "height": 560,
-        "minWidth": 280,
-        "minHeight": 220,
         "resizable": true,
-        "decorations": true,
+        "decorations": false,
         "transparent": true,
         "alwaysOnTop": true
       }

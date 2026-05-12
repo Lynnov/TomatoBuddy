@@ -249,12 +249,25 @@ button:active {
 }
 
 .is-mini-mode .mini-widget {
-  background: rgba(255, 244, 215, 0.94);
+  width: 180px;
+  min-height: 150px;
+  padding: 4px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .mini-widget .pixel-cat {
   transform: scale(0.7);
   margin: -10px auto -6px;
+}
+
+.is-mini-mode .mini-widget .pixel-cat {
+  margin: -14px auto -12px;
+}
+
+.is-mini-mode .mini-widget .cat-bubble {
+  box-shadow: none;
 }
 
 .mini-widget strong {
