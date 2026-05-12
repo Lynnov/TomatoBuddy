@@ -52,6 +52,14 @@ export default function App() {
     void applyWindowMode(ui.windowMode, settings.alwaysOnTop);
   }, [ui.windowMode, settings.alwaysOnTop]);
 
+  useEffect(() => {
+    document.documentElement.classList.toggle('is-mini-mode', ui.windowMode === 'mini');
+    document.documentElement.classList.toggle('is-full-mode', ui.windowMode === 'full');
+    return () => {
+      document.documentElement.classList.remove('is-mini-mode', 'is-full-mode');
+    };
+  }, [ui.windowMode]);
+
   function petCat() {
     const next = petMessages[Math.floor(Math.random() * petMessages.length)];
     setCatMessage(next);

@@ -6,8 +6,10 @@ export async function applyWindowMode(mode: WindowMode, alwaysOnTop: boolean): P
   const appWindow = getCurrentWindow();
   await appWindow.setAlwaysOnTop(alwaysOnTop);
   if (mode === 'mini') {
+    await appWindow.setDecorations(false);
     await appWindow.setSize(new LogicalSize(180, 150));
   } else {
+    await appWindow.setDecorations(true);
     await appWindow.setSize(new LogicalSize(380, 560));
   }
 }

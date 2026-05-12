@@ -29,4 +29,13 @@ describe('App', () => {
     expect(screen.getByText(/喵|坚持|喝水|安静/)).toBeInTheDocument();
     expect(screen.getByText('25:00')).toBeInTheDocument();
   });
+
+  it('switches to transparent mini widget shell', () => {
+    render(<App />);
+
+    fireEvent.click(screen.getByRole('button', { name: '切换迷你挂件' }));
+
+    expect(screen.getByRole('main')).toHaveClass('mini-widget');
+    expect(document.documentElement).toHaveClass('is-mini-mode');
+  });
 });

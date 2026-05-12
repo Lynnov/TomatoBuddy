@@ -1,7 +1,13 @@
 :root {
   color: #3a2a1c;
-  background: #f6e8c8;
+  background: transparent;
   font-family: "Trebuchet MS", "Microsoft YaHei", sans-serif;
+}
+
+html,
+body,
+#root {
+  background: transparent;
 }
 
 * {
@@ -12,7 +18,17 @@ body {
   margin: 0;
   min-width: 180px;
   min-height: 150px;
+}
+
+.is-full-mode body,
+.is-full-mode .app-shell {
   background: radial-gradient(circle at 20% 10%, #fff4d7 0 18%, transparent 19%), #f6e8c8;
+}
+
+.is-mini-mode body {
+  min-width: 180px;
+  min-height: 150px;
+  background: transparent;
 }
 
 button,
@@ -230,6 +246,10 @@ button:active {
   border: 4px solid #3a2a1c;
   background: #fff4d7;
   box-shadow: 6px 6px 0 #c77738;
+}
+
+.is-mini-mode .mini-widget {
+  background: rgba(255, 244, 215, 0.94);
 }
 
 .mini-widget .pixel-cat {
