@@ -4,7 +4,7 @@ import { ReminderCard } from './components/ReminderCard';
 import { SettingsPanel } from './components/SettingsPanel';
 import { TimerDisplay } from './components/TimerDisplay';
 import { MiniWidget } from './components/MiniWidget';
-import { addCompletedFocus, formatFocusTotal } from './domain/stats';
+import { addCompletedFocus, ensureTodayStats, formatFocusTotal } from './domain/stats';
 import { createInitialTimer, pauseTimer, resetTimer, resumeTimer, startBreak, startFocus, startNextFocus, tickTimer } from './domain/timer';
 import type { TimerState, UiState, UserSettings } from './domain/types';
 import { restoreTimer } from './domain/restore';
@@ -15,7 +15,11 @@ import { applyWindowMode } from './services/windowControl';
 const petMessages = ['喵，我在陪你。', '再坚持一下下。', '别忘了喝水。', '我会安静一点。'];
 
 function todayString(): string {
-  return new Date().toISOString().slice(0, 10);
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 export default function App() {
@@ -32,7 +36,7 @@ export default function App() {
       setTimer((current) => {
         const next = tickTimer(current, Date.now());
         if (current.mode === 'focus' && next.mode === 'focusComplete') {
-          setStats((currentStats) => addCompletedFocus(currentStats, current.durationSeconds));
+          setStats((currentStats) => addCompletedFocus(ensureTodayStats(currentStats, todayString()), current.durationSeconds));
           playGentleChime(settings.soundEnabled);
         }
         if (current.mode === 'break' && next.mode === 'breakComplete') {

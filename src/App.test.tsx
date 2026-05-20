@@ -38,4 +38,26 @@ describe('App', () => {
     expect(screen.getByRole('main')).toHaveClass('mini-widget');
     expect(document.documentElement).toHaveClass('is-mini-mode');
   });
+
+  it('counts a completed focus session on the current day after midnight', () => {
+    vi.setSystemTime(new Date('2026-05-11T23:59:30+08:00'));
+    render(<App />);
+
+    fireEvent.click(screen.getByRole('button', { name: '开始专注' }));
+
+    act(() => {
+      vi.setSystemTime(new Date('2026-05-12T00:24:30+08:00'));
+      vi.advanceTimersByTime(25 * 60 * 1000);
+    });
+
+    const saved = JSON.parse(localStorage.getItem('tomato-buddy:v1') ?? '{}');
+
+    expect(screen.getByText('今日小鱼干：1 条')).toBeInTheDocument();
+    expect(saved.stats).toEqual({
+      date: '2026-05-12',
+      completedPomodoros: 1,
+      focusSeconds: 1500,
+      fishCount: 1,
+    });
+  });
 });
