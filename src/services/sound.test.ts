@@ -91,4 +91,61 @@ describe('playGentleChime', () => {
 
     expect(close).toHaveBeenCalledTimes(1);
   });
+
+  it('ignores rejected audio context close after playback ends', async () => {
+    const oscillator = {
+      type: 'sine',
+      frequency: { setValueAtTime, exponentialRampToValueAtTime },
+      connect,
+      start,
+      stop,
+      onended: null as (() => void) | null,
+    };
+    const rejectedClose = vi.fn(() => Promise.reject(new Error('close failed')));
+    const context = {
+      currentTime: 1,
+      destination: {},
+      createOscillator: vi.fn(() => oscillator),
+      createGain: vi.fn(() => ({ gain: { setValueAtTime, exponentialRampToValueAtTime }, connect })),
+      close: rejectedClose,
+    };
+    Reflect.set(window, 'AudioContext', vi.fn(function () {
+      return context;
+    }));
+
+    playGentleChime(true);
+    expect(() => oscillator.onended?.()).not.toThrow();
+    await Promise.resolve();
+
+    expect(rejectedClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('ignores synchronous audio context close failures after playback ends', () => {
+    const oscillator = {
+      type: 'sine',
+      frequency: { setValueAtTime, exponentialRampToValueAtTime },
+      connect,
+      start,
+      stop,
+      onended: null as (() => void) | null,
+    };
+    const throwingClose = vi.fn(() => {
+      throw new Error('close failed');
+    });
+    const context = {
+      currentTime: 1,
+      destination: {},
+      createOscillator: vi.fn(() => oscillator),
+      createGain: vi.fn(() => ({ gain: { setValueAtTime, exponentialRampToValueAtTime }, connect })),
+      close: throwingClose,
+    };
+    Reflect.set(window, 'AudioContext', vi.fn(function () {
+      return context;
+    }));
+
+    playGentleChime(true);
+
+    expect(() => oscillator.onended?.()).not.toThrow();
+    expect(throwingClose).toHaveBeenCalledTimes(1);
+  });
 });
