@@ -63,4 +63,16 @@ describe('windowControl', () => {
     await expect(applyWindowMode('mini', true)).resolves.toBeUndefined();
     await expect(startWindowDrag()).resolves.toBeUndefined();
   });
+
+  it('does not reject when Tauri window import fails', async () => {
+    Reflect.set(window, '__TAURI_INTERNALS__', {});
+    vi.resetModules();
+    vi.doMock('@tauri-apps/api/window', () => {
+      throw new Error('import failed');
+    });
+    const { applyWindowMode, startWindowDrag } = await import('./windowControl');
+
+    await expect(applyWindowMode('mini', true)).resolves.toBeUndefined();
+    await expect(startWindowDrag()).resolves.toBeUndefined();
+  });
 });
