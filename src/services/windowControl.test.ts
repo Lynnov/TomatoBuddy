@@ -26,6 +26,23 @@ vi.mock('@tauri-apps/api/window', () => ({
 describe('windowControl', () => {
   afterEach(() => {
     vi.clearAllMocks();
+    vi.doMock('@tauri-apps/api/window', () => ({
+      LogicalSize: class LogicalSize {
+        width: number;
+        height: number;
+
+        constructor(width: number, height: number) {
+          this.width = width;
+          this.height = height;
+        }
+      },
+      getCurrentWindow: () => ({
+        setAlwaysOnTop,
+        setDecorations,
+        setSize,
+        startDragging,
+      }),
+    }));
     Reflect.deleteProperty(window, '__TAURI_INTERNALS__');
   });
 
@@ -36,6 +53,8 @@ describe('windowControl', () => {
     await expect(startWindowDrag()).resolves.toBeUndefined();
 
     expect(setAlwaysOnTop).not.toHaveBeenCalled();
+    expect(setDecorations).not.toHaveBeenCalled();
+    expect(setSize).not.toHaveBeenCalled();
     expect(startDragging).not.toHaveBeenCalled();
   });
 
@@ -62,6 +81,19 @@ describe('windowControl', () => {
 
     await expect(applyWindowMode('mini', true)).resolves.toBeUndefined();
     await expect(startWindowDrag()).resolves.toBeUndefined();
+  });
+
+  it('continues applying window mode when individual Tauri APIs fail', async () => {
+    Reflect.set(window, '__TAURI_INTERNALS__', {});
+    setAlwaysOnTop.mockRejectedValueOnce(new Error('pin failed'));
+    setDecorations.mockRejectedValueOnce(new Error('decorations failed'));
+    const { applyWindowMode } = await import('./windowControl');
+
+    await expect(applyWindowMode('mini', true)).resolves.toBeUndefined();
+
+    expect(setAlwaysOnTop).toHaveBeenCalledWith(true);
+    expect(setDecorations).toHaveBeenCalledWith(false);
+    expect(setSize).toHaveBeenCalledWith(expect.objectContaining({ width: 180, height: 150 }));
   });
 
   it('does not reject when Tauri window import fails', async () => {
