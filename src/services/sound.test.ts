@@ -7,6 +7,8 @@ const connect = vi.fn();
 const start = vi.fn();
 const stop = vi.fn();
 const close = vi.fn(() => Promise.resolve());
+const originalAudioContext = window.AudioContext;
+const originalWebkitAudioContext = window.webkitAudioContext;
 
 class MockAudioContext {
   currentTime = 1;
@@ -38,8 +40,8 @@ class MockAudioContext {
 describe('playGentleChime', () => {
   afterEach(() => {
     vi.clearAllMocks();
-    Reflect.deleteProperty(window, 'AudioContext');
-    Reflect.deleteProperty(window, 'webkitAudioContext');
+    Reflect.set(window, 'AudioContext', originalAudioContext);
+    Reflect.set(window, 'webkitAudioContext', originalWebkitAudioContext);
   });
 
   it('does not create an audio context when disabled', () => {
@@ -147,5 +149,36 @@ describe('playGentleChime', () => {
 
     expect(() => oscillator.onended?.()).not.toThrow();
     expect(throwingClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('handles promise-like audio context close failures', () => {
+    const oscillator = {
+      type: 'sine',
+      frequency: { setValueAtTime, exponentialRampToValueAtTime },
+      connect,
+      start,
+      stop,
+      onended: null as (() => void) | null,
+    };
+    const closeCatch = vi.fn();
+    const promiseLikeClose = vi.fn(() => ({
+      catch: closeCatch,
+    }));
+    const context = {
+      currentTime: 1,
+      destination: {},
+      createOscillator: vi.fn(() => oscillator),
+      createGain: vi.fn(() => ({ gain: { setValueAtTime, exponentialRampToValueAtTime }, connect })),
+      close: promiseLikeClose,
+    };
+    Reflect.set(window, 'AudioContext', vi.fn(function () {
+      return context;
+    }));
+
+    playGentleChime(true);
+    oscillator.onended?.();
+
+    expect(promiseLikeClose).toHaveBeenCalledTimes(1);
+    expect(closeCatch).toHaveBeenCalledWith(expect.any(Function));
   });
 });

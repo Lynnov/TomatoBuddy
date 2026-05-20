@@ -12,9 +12,7 @@ export function playGentleChime(enabled: boolean): void {
 
     try {
       const closeResult = currentContext.close();
-      if (closeResult instanceof Promise) {
-        void closeResult.catch(() => undefined);
-      }
+      void closeResult?.catch?.(() => undefined);
     } catch {
       return;
     }
