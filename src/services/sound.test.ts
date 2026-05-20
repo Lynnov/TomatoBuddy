@@ -182,6 +182,35 @@ describe('playGentleChime', () => {
     expect(closeCatch).toHaveBeenCalledWith(expect.any(Function));
   });
 
+  it('closes the audio context if playback start fails', () => {
+    const throwingStart = vi.fn(() => {
+      throw new Error('start failed');
+    });
+    const oscillator = {
+      type: 'sine',
+      frequency: { setValueAtTime, exponentialRampToValueAtTime },
+      connect,
+      start: throwingStart,
+      stop,
+      onended: null as (() => void) | null,
+    };
+    const context = {
+      currentTime: 1,
+      destination: {},
+      createOscillator: vi.fn(() => oscillator),
+      createGain: vi.fn(() => ({ gain: { setValueAtTime, exponentialRampToValueAtTime }, connect })),
+      close,
+    };
+    Reflect.set(window, 'AudioContext', vi.fn(function () {
+      return context;
+    }));
+
+    expect(() => playGentleChime(true)).not.toThrow();
+
+    expect(throwingStart).toHaveBeenCalledTimes(1);
+    expect(close).toHaveBeenCalledTimes(1);
+  });
+
   it('closes the audio context if playback start or stop fails', () => {
     const throwingStop = vi.fn(() => {
       throw new Error('stop failed');
