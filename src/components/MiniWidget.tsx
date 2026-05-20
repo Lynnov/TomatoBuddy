@@ -1,5 +1,6 @@
 import { formatDuration } from '../domain/time';
 import type { TimerMode } from '../domain/types';
+import { startWindowDrag } from '../services/windowControl';
 import { PixelCat } from './PixelCat';
 
 interface MiniWidgetProps {
@@ -11,10 +12,17 @@ interface MiniWidgetProps {
 }
 
 export function MiniWidget({ mode, remainingSeconds, message, onPet, onExpand }: MiniWidgetProps) {
+  function handleDragStart() {
+    void startWindowDrag();
+  }
+
   return (
     <main className="mini-widget" onDoubleClick={onExpand}>
+      <button type="button" className="mini-drag-handle" aria-label="拖动迷你挂件" onMouseDown={handleDragStart}>
+        ⠿
+      </button>
       <PixelCat mode={mode} message={message} onPet={onPet} />
-      <strong>{formatDuration(remainingSeconds)}</strong>
+      <strong className="mini-time">{formatDuration(remainingSeconds)}</strong>
     </main>
   );
 }

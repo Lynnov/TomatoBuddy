@@ -25,4 +25,15 @@ describe('mini widget styles', () => {
     expect(miniWidgetBlock).not.toContain('background: rgba(255, 244, 215, 0.94)');
     expect(miniWidgetBlock).not.toContain('box-shadow: 6px 6px 0 #c77738');
   });
+
+  it('keeps mini time readable on light and dark backgrounds', () => {
+    const miniTimeBlock = getRuleBlock('.is-mini-mode .mini-time');
+    const dragHandleBlock = getRuleBlock('.mini-drag-handle');
+
+    expect(miniTimeBlock).toContain('color: #fff4d7');
+    expect(miniTimeBlock).toContain('text-shadow:');
+    expect(miniTimeBlock).toContain('#3a2a1c');
+    expect(miniTimeBlock).toContain('#ffffff');
+    expect(dragHandleBlock).toContain('cursor: grab');
+  });
 });
