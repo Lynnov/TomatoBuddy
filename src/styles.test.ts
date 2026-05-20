@@ -17,8 +17,10 @@ describe('mini widget styles', () => {
   it('keeps mini mode transparent and visually minimal', () => {
     const miniBodyBlock = getRuleBlock('.is-mini-mode body');
     const miniWidgetBlock = getRuleBlock('.is-mini-mode .mini-widget');
+    const baseMiniWidgetBlock = getRuleBlock('.mini-widget');
 
     expect(miniBodyBlock).toContain('background: transparent');
+    expect(baseMiniWidgetBlock).toContain('position: relative');
     expect(miniWidgetBlock).toContain('border: 0');
     expect(miniWidgetBlock).toContain('box-shadow: none');
     expect(miniWidgetBlock).toContain('padding: 4px');

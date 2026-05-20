@@ -238,6 +238,7 @@ button:active {
 }
 
 .mini-widget {
+  position: relative;
   width: 180px;
   min-height: 150px;
   display: grid;

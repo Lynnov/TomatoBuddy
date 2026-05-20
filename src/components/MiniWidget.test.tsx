@@ -40,4 +40,21 @@ describe('MiniWidget', () => {
 
     expect(onExpand).toHaveBeenCalledTimes(1);
   });
+
+  it('does not expand when double clicking the drag handle', () => {
+    const onExpand = vi.fn();
+    render(
+      <MiniWidget
+        mode="focus"
+        remainingSeconds={1500}
+        message={null}
+        onPet={vi.fn()}
+        onExpand={onExpand}
+      />,
+    );
+
+    fireEvent.doubleClick(screen.getByRole('button', { name: '拖动迷你挂件' }));
+
+    expect(onExpand).not.toHaveBeenCalled();
+  });
 });

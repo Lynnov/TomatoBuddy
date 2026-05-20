@@ -18,7 +18,13 @@ export function MiniWidget({ mode, remainingSeconds, message, onPet, onExpand }:
 
   return (
     <main className="mini-widget" onDoubleClick={onExpand}>
-      <button type="button" className="mini-drag-handle" aria-label="拖动迷你挂件" onMouseDown={handleDragStart}>
+      <button
+        type="button"
+        className="mini-drag-handle"
+        aria-label="拖动迷你挂件"
+        onMouseDown={handleDragStart}
+        onDoubleClick={(event) => event.stopPropagation()}
+      >
         ⠿
       </button>
       <PixelCat mode={mode} message={message} onPet={onPet} />
