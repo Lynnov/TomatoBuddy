@@ -13,7 +13,7 @@ describe('MiniWidget', () => {
     vi.useRealTimers();
   });
 
-  it('starts window dragging from the cat', () => {
+  it('starts window dragging from the mini frame outside the cat', () => {
     render(
       <MiniWidget
         mode="focus"
@@ -24,12 +24,30 @@ describe('MiniWidget', () => {
       />,
     );
 
-    fireEvent.mouseDown(screen.getByRole('button', { name: '摸摸猫猫' }));
+    fireEvent.mouseDown(screen.getByRole('main'));
 
     expect(startWindowDrag).toHaveBeenCalledTimes(1);
   });
 
-  it('keeps petting the cat on click', () => {
+  it('does not start window dragging from the cat', () => {
+    render(
+      <MiniWidget
+        mode="focus"
+        remainingSeconds={1500}
+        message={null}
+        onPet={vi.fn()}
+        onExpand={vi.fn()}
+      />,
+    );
+
+    const cat = screen.getByRole('button', { name: '摸摸猫猫' });
+    fireEvent.mouseDown(cat);
+    fireEvent.mouseMove(cat, { clientX: 28, clientY: 20 });
+
+    expect(startWindowDrag).not.toHaveBeenCalled();
+  });
+
+  it('keeps petting the cat on click without dragging', () => {
     vi.useFakeTimers();
     const onPet = vi.fn();
     render(
@@ -42,9 +60,13 @@ describe('MiniWidget', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: '摸摸猫猫' }));
+    const cat = screen.getByRole('button', { name: '摸摸猫猫' });
+    fireEvent.mouseDown(cat, { clientX: 20, clientY: 20 });
+    fireEvent.mouseUp(cat, { clientX: 20, clientY: 20 });
+    fireEvent.click(cat);
     vi.runAllTimers();
 
+    expect(startWindowDrag).not.toHaveBeenCalled();
     expect(onPet).toHaveBeenCalledTimes(1);
   });
 
@@ -63,11 +85,16 @@ describe('MiniWidget', () => {
     );
 
     const cat = screen.getByRole('button', { name: '摸摸猫猫' });
+    fireEvent.mouseDown(cat, { clientX: 20, clientY: 20 });
+    fireEvent.mouseUp(cat, { clientX: 20, clientY: 20 });
     fireEvent.click(cat);
+    fireEvent.mouseDown(cat, { clientX: 20, clientY: 20 });
+    fireEvent.mouseUp(cat, { clientX: 20, clientY: 20 });
     fireEvent.click(cat);
     fireEvent.doubleClick(cat);
     vi.runAllTimers();
 
+    expect(startWindowDrag).not.toHaveBeenCalled();
     expect(onExpand).toHaveBeenCalledTimes(1);
     expect(onPet).not.toHaveBeenCalled();
   });

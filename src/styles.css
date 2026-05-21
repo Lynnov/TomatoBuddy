@@ -256,6 +256,7 @@ button:active {
   border: 0;
   background: transparent;
   box-shadow: none;
+  cursor: grab;
 }
 
 .is-mini-mode .mini-time {
@@ -275,10 +276,10 @@ button:active {
 
 .is-mini-mode .mini-widget .pixel-cat {
   margin: -14px auto -12px;
-  cursor: grab;
+  cursor: pointer;
 }
 
-.is-mini-mode .mini-widget .pixel-cat:active {
+.is-mini-mode .mini-widget:active {
   cursor: grabbing;
 }
 

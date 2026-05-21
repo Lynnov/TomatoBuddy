@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import type { MouseEvent } from 'react';
 import { formatDuration } from '../domain/time';
 import type { TimerMode } from '../domain/types';
 import { startWindowDrag } from '../services/windowControl';
@@ -25,7 +26,9 @@ export function MiniWidget({ mode, remainingSeconds, message, onPet, onExpand }:
     };
   }, []);
 
-  function handleDragStart() {
+  function handleDragStart(event: MouseEvent<HTMLElement>) {
+    if ((event.target as Element).closest('.pixel-cat')) return;
+
     void startWindowDrag();
   }
 
@@ -50,8 +53,8 @@ export function MiniWidget({ mode, remainingSeconds, message, onPet, onExpand }:
   }
 
   return (
-    <main className="mini-widget" onDoubleClick={handleExpand}>
-      <PixelCat mode={mode} message={message} onPet={handlePet} onDragStart={handleDragStart} />
+    <main className="mini-widget" onMouseDown={handleDragStart} onDoubleClick={handleExpand}>
+      <PixelCat mode={mode} message={message} onPet={handlePet} />
       <strong className="mini-time">{formatDuration(remainingSeconds)}</strong>
     </main>
   );

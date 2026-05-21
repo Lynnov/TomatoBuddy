@@ -37,10 +37,12 @@ describe('mini widget styles', () => {
     expect(miniTimeBlock).toContain('#ffffff');
   });
 
-  it('uses the mini cat as the drag affordance', () => {
+  it('uses the mini frame outside the cat as the drag affordance', () => {
+    const miniWidgetBlock = getRuleBlock('.is-mini-mode .mini-widget');
     const miniCatBlock = getRuleBlock('.is-mini-mode .mini-widget .pixel-cat');
 
     expect(css).not.toContain('.mini-drag-handle');
-    expect(miniCatBlock).toContain('cursor: grab');
+    expect(miniWidgetBlock).toContain('cursor: grab');
+    expect(miniCatBlock).toContain('cursor: pointer');
   });
 });
