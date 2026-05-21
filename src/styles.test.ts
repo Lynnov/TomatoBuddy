@@ -30,12 +30,17 @@ describe('mini widget styles', () => {
 
   it('keeps mini time readable on light and dark backgrounds', () => {
     const miniTimeBlock = getRuleBlock('.is-mini-mode .mini-time');
-    const dragHandleBlock = getRuleBlock('.mini-drag-handle');
 
     expect(miniTimeBlock).toContain('color: #fff4d7');
     expect(miniTimeBlock).toContain('text-shadow:');
     expect(miniTimeBlock).toContain('#3a2a1c');
     expect(miniTimeBlock).toContain('#ffffff');
-    expect(dragHandleBlock).toContain('cursor: grab');
+  });
+
+  it('uses the mini cat as the drag affordance', () => {
+    const miniCatBlock = getRuleBlock('.is-mini-mode .mini-widget .pixel-cat');
+
+    expect(css).not.toContain('.mini-drag-handle');
+    expect(miniCatBlock).toContain('cursor: grab');
   });
 });
