@@ -1,4 +1,5 @@
 import type { TimerMode } from '../domain/types';
+import { SukiyakiCatSvg } from './SukiyakiCatSvg';
 
 interface PixelCatProps {
   mode: TimerMode;
@@ -14,14 +15,7 @@ export function PixelCat({ mode, message, onPet }: PixelCatProps) {
       onClick={onPet}
       aria-label="摸摸猫猫"
     >
-      <span className="cat-ear cat-ear-left" />
-      <span className="cat-ear cat-ear-right" />
-      <span className="cat-face">
-        <span className="cat-eye cat-eye-left" />
-        <span className="cat-eye cat-eye-right" />
-        <span className="cat-mouth" />
-      </span>
-      <span className="cat-tail" />
+      <SukiyakiCatSvg />
       {message && <span className="cat-bubble">{message}</span>}
     </button>
   );

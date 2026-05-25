@@ -37,12 +37,34 @@ describe('mini widget styles', () => {
     expect(miniTimeBlock).toContain('#ffffff');
   });
 
-  it('uses the mini frame outside the cat as the drag affordance', () => {
+  it('sizes the SVG cat and keeps mini frame outside the cat as the drag affordance', () => {
+    const catBlock = getRuleBlock('.pixel-cat');
+    const catSvgBlock = getRuleBlock('.cat-svg');
     const miniWidgetBlock = getRuleBlock('.is-mini-mode .mini-widget');
     const miniCatBlock = getRuleBlock('.is-mini-mode .mini-widget .pixel-cat');
 
     expect(css).not.toContain('.mini-drag-handle');
+    expect(css).not.toContain('.cat-face');
+    expect(css).not.toContain('.cat-ear');
+    expect(css).not.toContain('.cat-eye');
+    expect(css).not.toContain('.cat-mouth');
+    expect(css).not.toContain('.cat-tail');
+    expect(css).not.toContain('cat-bob');
+    expect(css).not.toContain('cat-blink');
+    expect(css).not.toContain('tail-wag');
+    expect(catBlock).toContain('width: 180px');
+    expect(catBlock).toContain('height: 180px');
+    expect(catBlock).toContain('background: transparent');
+    expect(catBlock).toContain('border: 0');
+    expect(catBlock).toContain('box-shadow: none');
+    expect(catBlock).toContain('animation: cat-idle 2.4s ease-in-out infinite');
+    expect(catSvgBlock).toContain('width: 100%');
+    expect(catSvgBlock).toContain('height: 100%');
+    expect(catSvgBlock).toContain('overflow: visible');
+    expect(catSvgBlock).toContain('filter: drop-shadow(');
     expect(miniWidgetBlock).toContain('cursor: grab');
+    expect(miniCatBlock).toContain('width: 126px');
+    expect(miniCatBlock).toContain('height: 126px');
     expect(miniCatBlock).toContain('cursor: pointer');
   });
 });

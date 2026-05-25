@@ -93,81 +93,33 @@ button:active {
 .pixel-cat {
   position: relative;
   display: block;
-  width: 132px;
-  height: 118px;
-  margin: 28px auto 18px;
+  width: 180px;
+  height: 180px;
+  margin: 12px auto 14px;
   border: 0;
   background: transparent;
   box-shadow: none;
   padding: 0;
-  animation: cat-bob 1.8s steps(2, end) infinite;
+  animation: cat-idle 2.4s ease-in-out infinite;
 }
 
 .pixel-cat:active {
-  transform: none;
+  transform: scale(0.98);
   box-shadow: none;
 }
 
-.cat-face {
-  position: absolute;
-  left: 24px;
-  top: 28px;
-  width: 84px;
-  height: 70px;
-  background: #f5a65b;
-  border: 4px solid #3a2a1c;
-  box-shadow: inset -10px -8px 0 #e88d45;
-}
-
-.cat-ear {
-  position: absolute;
-  top: 8px;
-  width: 32px;
-  height: 32px;
-  background: #f5a65b;
-  border: 4px solid #3a2a1c;
-  transform: rotate(45deg);
-}
-
-.cat-ear-left { left: 26px; }
-.cat-ear-right { right: 26px; }
-
-.cat-eye {
-  position: absolute;
-  top: 24px;
-  width: 10px;
-  height: 14px;
-  background: #3a2a1c;
-  animation: cat-blink 4s steps(1, end) infinite;
-}
-
-.cat-eye-left { left: 22px; }
-.cat-eye-right { right: 22px; }
-
-.cat-mouth {
-  position: absolute;
-  left: 36px;
-  top: 46px;
-  width: 12px;
-  height: 6px;
-  border-bottom: 4px solid #3a2a1c;
-}
-
-.cat-tail {
-  position: absolute;
-  right: 2px;
-  top: 54px;
-  width: 34px;
-  height: 18px;
-  border: 4px solid #3a2a1c;
-  border-left: 0;
-  animation: tail-wag 1.2s steps(2, end) infinite;
+.cat-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 8px 0 rgba(58, 42, 28, 0.16));
 }
 
 .cat-bubble {
   position: absolute;
-  left: 92px;
-  top: -14px;
+  left: 128px;
+  top: 4px;
   width: 130px;
   background: #ffffff;
   border: 3px solid #3a2a1c;
@@ -270,12 +222,15 @@ button:active {
 }
 
 .mini-widget .pixel-cat {
-  transform: scale(0.7);
-  margin: -10px auto -6px;
+  width: 126px;
+  height: 126px;
+  margin: -8px auto -8px;
 }
 
 .is-mini-mode .mini-widget .pixel-cat {
-  margin: -14px auto -12px;
+  width: 126px;
+  height: 126px;
+  margin: -12px auto -10px;
   cursor: pointer;
 }
 
@@ -284,6 +239,8 @@ button:active {
 }
 
 .is-mini-mode .mini-widget .cat-bubble {
+  left: 92px;
+  top: 0;
   box-shadow: none;
 }
 
@@ -291,17 +248,7 @@ button:active {
   font-size: 24px;
 }
 
-@keyframes cat-bob {
+@keyframes cat-idle {
   0%, 100% { translate: 0 0; }
   50% { translate: 0 -4px; }
-}
-
-@keyframes cat-blink {
-  0%, 92%, 100% { height: 14px; }
-  94% { height: 3px; }
-}
-
-@keyframes tail-wag {
-  0%, 100% { rotate: 0deg; }
-  50% { rotate: 8deg; }
 }

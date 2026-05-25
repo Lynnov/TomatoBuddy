@@ -18,13 +18,14 @@
     "react-dom": "latest"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "latest",
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
     "@testing-library/user-event": "latest",
-    "@tauri-apps/cli": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "jsdom": "latest",
+    "sharp": "^0.34.5",
     "typescript": "latest",
     "vite": "latest",
     "vitest": "latest"
