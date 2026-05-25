@@ -6,7 +6,7 @@ import { TimerDisplay } from './components/TimerDisplay';
 import { MiniWidget } from './components/MiniWidget';
 import { addCompletedFocus, ensureTodayStats, formatFocusTotal } from './domain/stats';
 import { createInitialTimer, pauseTimer, resetTimer, resumeTimer, startBreak, startFocus, startNextFocus, tickTimer } from './domain/timer';
-import type { TimerState, UiState, UserSettings } from './domain/types';
+import type { TimerMode, TimerState, UiState, UserSettings } from './domain/types';
 import { restoreTimer } from './domain/restore';
 import { loadAppStorage, saveAppStorage } from './services/storage';
 import { playGentleChime } from './services/sound';
@@ -29,6 +29,7 @@ export default function App() {
   const [stats, setStats] = useState(initial.stats);
   const [ui, setUi] = useState<UiState>(() => ({ ...initial.ui, windowMode: initial.settings.defaultMiniMode ? 'mini' : initial.ui.windowMode }));
   const [catMessage, setCatMessage] = useState<string | null>(null);
+  const [dismissedReminderMode, setDismissedReminderMode] = useState<TimerMode | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
@@ -64,6 +65,10 @@ export default function App() {
     };
   }, [ui.windowMode]);
 
+  useEffect(() => {
+    setDismissedReminderMode((dismissedMode) => (dismissedMode === timer.mode ? dismissedMode : null));
+  }, [timer.mode]);
+
   function petCat() {
     const next = petMessages[Math.floor(Math.random() * petMessages.length)];
     setCatMessage(next);
@@ -89,7 +94,9 @@ export default function App() {
   }
 
   function dismissReminder() {
-    setTimer((current) => ({ ...current, status: 'completed' }));
+    if (timer.mode === 'focusComplete' || timer.mode === 'breakComplete') {
+      setDismissedReminderMode(timer.mode);
+    }
   }
 
   if (ui.windowMode === 'mini') {
@@ -129,14 +136,16 @@ export default function App() {
 
         {settingsOpen && <SettingsPanel settings={settings} onChange={setSettings} />}
 
-        <ReminderCard
-          mode={timer.mode}
-          onDismiss={dismissReminder}
-          onPrimary={() => {
-            if (timer.mode === 'focusComplete') setTimer(startBreak(timer, Date.now()));
-            if (timer.mode === 'breakComplete') setTimer(startNextFocus(timer, settings.focusMinutes, settings.breakMinutes, Date.now()));
-          }}
-        />
+        {dismissedReminderMode !== timer.mode && (
+          <ReminderCard
+            mode={timer.mode}
+            onDismiss={dismissReminder}
+            onPrimary={() => {
+              if (timer.mode === 'focusComplete') setTimer(startBreak(timer, Date.now()));
+              if (timer.mode === 'breakComplete') setTimer(startNextFocus(timer, settings.focusMinutes, settings.breakMinutes, Date.now()));
+            }}
+          />
+        )}
       </section>
     </main>
   );

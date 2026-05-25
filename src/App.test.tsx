@@ -1,5 +1,5 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 
 beforeEach(() => {
@@ -8,17 +8,40 @@ beforeEach(() => {
   vi.setSystemTime(new Date('2026-05-11T10:00:00+08:00'));
 });
 
+afterEach(() => {
+  cleanup();
+  vi.clearAllTimers();
+  vi.useRealTimers();
+});
+
 describe('App', () => {
   it('starts, completes focus, and awards a fish', () => {
     render(<App />);
 
     fireEvent.click(screen.getByRole('button', { name: '开始专注' }));
     act(() => {
-      vi.advanceTimersByTime(25 * 60 * 1000);
+      vi.setSystemTime(new Date('2026-05-11T10:25:00+08:00'));
+      vi.advanceTimersByTime(1000);
     });
 
     expect(screen.getByText('猫猫奖励你一条小鱼干。')).toBeInTheDocument();
     expect(screen.getByText('今日小鱼干：1 条')).toBeInTheDocument();
+  });
+
+  it('dismisses the focus completion reminder when clicking later', () => {
+    render(<App />);
+
+    fireEvent.click(screen.getByRole('button', { name: '开始专注' }));
+    act(() => {
+      vi.setSystemTime(new Date('2026-05-11T10:25:00+08:00'));
+      vi.advanceTimersByTime(1000);
+    });
+
+    expect(screen.getByText('猫猫奖励你一条小鱼干。')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: '稍后' }));
+
+    expect(screen.queryByText('猫猫奖励你一条小鱼干。')).not.toBeInTheDocument();
   });
 
   it('pets the cat without changing the timer', () => {
@@ -47,7 +70,7 @@ describe('App', () => {
 
     act(() => {
       vi.setSystemTime(new Date(2026, 4, 12, 0, 24, 30));
-      vi.advanceTimersByTime(25 * 60 * 1000);
+      vi.advanceTimersByTime(1000);
     });
 
     const saved = JSON.parse(localStorage.getItem('tomato-buddy:v1') ?? '{}');
@@ -60,5 +83,5 @@ describe('App', () => {
       focusSeconds: 1500,
       fishCount: 1,
     });
-  });
+  }, 10000);
 });

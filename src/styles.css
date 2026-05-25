@@ -222,15 +222,17 @@ button:active {
 }
 
 .mini-widget .pixel-cat {
-  width: 126px;
-  height: 126px;
-  margin: -8px auto -8px;
+  width: 132px;
+  height: 118px;
+  margin: 0 auto -8px;
+  transform: scale(0.7);
 }
 
 .is-mini-mode .mini-widget .pixel-cat {
-  width: 126px;
-  height: 126px;
-  margin: -12px auto -10px;
+  width: 132px;
+  height: 118px;
+  margin: 0 auto -8px;
+  transform: scale(0.7);
   cursor: pointer;
 }
 
@@ -239,8 +241,10 @@ button:active {
 }
 
 .is-mini-mode .mini-widget .cat-bubble {
-  left: 92px;
-  top: 0;
+  left: 50%;
+  top: 118px;
+  width: 132px;
+  transform: translateX(-50%);
   box-shadow: none;
 }
 

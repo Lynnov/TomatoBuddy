@@ -42,6 +42,7 @@ describe('mini widget styles', () => {
     const catSvgBlock = getRuleBlock('.cat-svg');
     const miniWidgetBlock = getRuleBlock('.is-mini-mode .mini-widget');
     const miniCatBlock = getRuleBlock('.is-mini-mode .mini-widget .pixel-cat');
+    const miniBubbleBlock = getRuleBlock('.is-mini-mode .mini-widget .cat-bubble');
 
     expect(css).not.toContain('.mini-drag-handle');
     expect(css).not.toContain('.cat-face');
@@ -63,8 +64,18 @@ describe('mini widget styles', () => {
     expect(catSvgBlock).toContain('overflow: visible');
     expect(catSvgBlock).toContain('filter: drop-shadow(');
     expect(miniWidgetBlock).toContain('cursor: grab');
-    expect(miniCatBlock).toContain('width: 126px');
-    expect(miniCatBlock).toContain('height: 126px');
+    expect(miniCatBlock).toContain('width: 132px');
+    expect(miniCatBlock).toContain('height: 118px');
+    expect(miniCatBlock).toContain('transform: scale(0.7)');
+    expect(miniCatBlock).not.toContain('width: 126px');
+    expect(miniCatBlock).not.toContain('height: 126px');
+    expect(miniCatBlock).not.toContain('margin: -12px auto -10px');
     expect(miniCatBlock).toContain('cursor: pointer');
+    expect(miniBubbleBlock).toContain('left: 50%');
+    expect(miniBubbleBlock).toContain('top: 118px');
+    expect(miniBubbleBlock).toContain('width: 132px');
+    expect(miniBubbleBlock).toContain('transform: translateX(-50%)');
+    expect(miniBubbleBlock).not.toContain('top: 0');
+    expect(miniBubbleBlock).not.toContain('left: 92px');
   });
 });
